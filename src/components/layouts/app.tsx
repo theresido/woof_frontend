@@ -1,12 +1,8 @@
 import { useIntegration } from '@telegram-apps/react-router-integration'
 import {
-	bindMiniAppCSSVars,
-	bindThemeParamsCSSVars,
 	bindViewportCSSVars,
 	initNavigator,
 	useLaunchParams,
-	useMiniApp,
-	useThemeParams,
 	useViewport,
 } from '@telegram-apps/sdk-react'
 import { AppRoot } from '@telegram-apps/telegram-ui'
@@ -15,20 +11,16 @@ import { Navigate, Route, RouteProps, Router, Routes } from 'react-router-dom'
 
 import { routes } from '@/routes'
 import { JSX } from 'react/jsx-runtime'
+import { HomeLayout } from './homeLayout'
 
 export const App: FC = () => {
 	const lp = useLaunchParams()
-	const miniApp = useMiniApp()
-	const themeParams = useThemeParams()
+
 	const viewport = useViewport()
 
-	useEffect(() => {
-		return bindMiniAppCSSVars(miniApp, themeParams)
-	}, [miniApp, themeParams])
-
-	useEffect(() => {
-		return bindThemeParamsCSSVars(themeParams)
-	}, [themeParams])
+	if (!viewport?.isExpanded) {
+		viewport?.expand() // will expand the Mini App, if it's not
+	}
 
 	useEffect(() => {
 		return viewport && bindViewportCSSVars(viewport)
@@ -47,16 +39,15 @@ export const App: FC = () => {
 	}, [navigator])
 
 	return (
-		<AppRoot
-			appearance={miniApp.isDark ? 'dark' : 'light'}
-			platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}
-		>
+		<AppRoot platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}>
 			<Router location={location} navigator={reactNavigator}>
 				<Routes>
-					{routes.map((route: JSX.IntrinsicAttributes & RouteProps) => (
-						<Route key={route.path} {...route} />
-					))}
-					<Route path='*' element={<Navigate to='/' />} />
+					<Route path='/' element={<HomeLayout />}>
+						{routes.map((route: JSX.IntrinsicAttributes & RouteProps) => (
+							<Route key={route.path} {...route} />
+						))}
+						<Route path='*' element={<Navigate to='/' />} />
+					</Route>
 				</Routes>
 			</Router>
 		</AppRoot>

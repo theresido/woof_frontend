@@ -29,6 +29,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --safe-area-inset-bottom: calc(100dvh - var(--tg-viewport-stable-height, 100dvh))
   }
 
   .dark {
@@ -73,4 +74,5 @@ html,
 body {
   padding: 0;
   margin: 0;
+  padding-bottom: var(--safe-area-inset-bottom);
 }

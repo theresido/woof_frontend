@@ -11,7 +11,7 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
-	publicDir: './public',
+	// publicDir: './public',
 	server: {
 		// Exposes your dev server and makes it accessible for the devices in the same network.
 		host: true,
